@@ -3,6 +3,8 @@ import React, { useState } from "react";
 
 import {icons} from '../constants'
 
+import {images} from "../constants"
+import { ResizeMode, Video } from "expo-av";
 const VideoCard = ({
   video: {
     title,
@@ -32,10 +34,21 @@ const VideoCard = ({
         className="w-6 h-6" resizeMode="contain" /></View>
       </View>
       {play? (
-        <Text>Playing</Text>
+        <Video
+        source={{uri:video}}
+        className='w-full h-60 rounded-xl'
+        resizeMode={ResizeMode.CONTAIN}
+        useNativeControls
+        shouldPlay
+        onPlaybackStatusUpdate={(status)=>{
+          if(status.didJustFinish){
+            setplay(false)
+          }
+        }}
+        />
       ):(
         <TouchableOpacity activeOpacity={0.8} onPress={()=>setPlay(true)} className='w-full h-60 rounded-xl mt-3 relative justify-center items-center' >
-          <Image source={{uri:thumbnail}}
+          <Image source={images.thumbnail}
           className="w-full h-full rounded-xl mt-3" resizeMode="cover"/>
           <Image source={icons.play} className="w-12 h-12 absolute" resizeMode="contain" />
         </TouchableOpacity>

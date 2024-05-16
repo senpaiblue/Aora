@@ -50,8 +50,8 @@ const Home = () => {
             </View>
             <SearchInput placeHolder="search" />
             <View className="flex-1 pt-5 pb-8">
-              <Text className="text-gray-100">Latest Videos</Text>
-              <Trending posts={[{ id: 1 }, { id: 2 }, { id: 2 }] ?? []} />
+              <Text className="text-white font-psemibold text-lg">Latest Videos</Text>
+              <Trending posts={posts ?? []} />
             </View>
           </View>
         )}
