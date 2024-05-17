@@ -48,7 +48,7 @@ const Home = () => {
                 />
               </View>
             </View>
-            <SearchInput placeHolder="search" />
+            <SearchInput/>
             <View className="flex-1 pt-5 pb-8">
               <Text className="text-white font-psemibold text-lg">Latest Videos</Text>
               <Trending posts={posts ?? []} />
