@@ -13,13 +13,18 @@ import useAppwrite from "../../lib/useAppwrite";
 import VideoCard from "../../components/VideoCard";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { getUserPosts, signOut } from "../../lib/appWrite";
+import Inbox from "../../components/Inbox";
 
 const Profile = () => {
-  const { user, setUser, isLoggedIn } = useGlobalContext();
+  const { user, setUser, setIsLoggedIn } = useGlobalContext();
   const { data: posts } = useAppwrite(() => getUserPosts(user.$id));
   const logout = async () => {
     await signOut();
+    setUser(null)
+    setIsLoggedIn(false)
   };
+
+  console.log("user id is", user.$id)
   return (
     <SafeAreaView className="bg-primary h-full">
       <FlatList
@@ -41,6 +46,11 @@ const Profile = () => {
                 source={{ uri: user?.avatar }}
                 className="w-[90%] h-[90%] rounded-lg"
                 resizeMode="cover"
+              />
+              <Inbox
+              title={user?.username}
+              containerStyles="mt-5"
+              titleStyles='text-lg'
               />
             </View>
           </View>

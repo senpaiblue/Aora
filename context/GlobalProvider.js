@@ -5,38 +5,37 @@ const GlobalContext = createContext();
 export const useGlobalContext = () => useContext(GlobalContext);
 
 const GlobalProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLogged, setIsLogged] = useState(false);
   const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getCurrentUser()
-        .then((res)=>{
-          if(res){
-            setIsLoggedIn(true)
-            setUser(res)
-          }
-          else{
-            setIsLoggedIn(false)
-            setUser(null)
-          }
-        })
-        .catch((error)=>{
-          console.log(error)
-        })
-        .finally(()=>{
-          setIsLoading(false)
-        })
+      .then((res) => {
+        if (res) {
+          setIsLogged(true);
+          setUser(res);
+        } else {
+          setIsLogged(false);
+          setUser(null);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   return (
     <GlobalContext.Provider
       value={{
-        setIsLoading,
-        isLoggedIn,
+        isLogged,
+        setIsLogged,
+        user,
         setUser,
-        isLoading,
-        user
+        loading,
       }}
     >
       {children}
@@ -44,4 +43,4 @@ const GlobalProvider = ({ children }) => {
   );
 };
 
-export default GlobalProvider
+export default GlobalProvider;
