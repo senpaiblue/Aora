@@ -13,6 +13,7 @@ const GlobalProvider = ({ children }) => {
     getCurrentUser()
       .then((res) => {
         if (res) {
+          console.log(res)
           setIsLogged(true);
           setUser(res);
         } else {
@@ -36,6 +37,7 @@ const GlobalProvider = ({ children }) => {
         user,
         setUser,
         loading,
+        setLoading,
       }}
     >
       {children}
