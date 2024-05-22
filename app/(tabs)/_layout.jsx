@@ -53,7 +53,7 @@ const tabs = () => {
           ),
         }}
       />
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="bookmark"
         options={{
           title: "Bookmark",
@@ -67,7 +67,7 @@ const tabs = () => {
             />
           ),
         }}
-      />
+      /> */}
       <Tabs.Screen
         name="create"
         options={{

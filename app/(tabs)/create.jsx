@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Image,
   View,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -12,9 +13,13 @@ import FormField from "../../components/FormField";
 import { icons } from "../../constants";
 import { Video, ResizeMode } from "expo-av";
 import CustomButton from "../../components/CustomButton";
-import * as DocumentPicker from "expo-document-picker";
+import * as ImagePicker from "expo-image-picker";
+import { router } from "expo-router";
+import { createVideo } from "../../lib/appWrite";
+import { useGlobalContext } from "../../context/GlobalProvider";
 
 const create = () => {
+  const { user } = useGlobalContext();
   const [uploading, setuploading] = useState(false);
   const [form, setform] = useState({
     title: "",
@@ -23,26 +28,45 @@ const create = () => {
     prompt: "",
   });
 
-  const submit = () => {};
-  const openPicker = async (seleType) => {
-    const result = await DocumentPicker.getDocumentAsync({
-      type:
-        seleType === "image"
-          ? ["image/png", "image/jpg"]
-          : ["video/mp4", "video/gif"],
+  const submit = async () => {
+    if (!form.prompt || !form.title || !form.video || !form.thumbnail) {
+      return Alert.alert("Please fill all the fields");
+    }
+    setuploading(false);
+    try {
+      await createVideo({
+        ...form,
+        userId: user.$id,
+      });
+      Alert.alert("Successfull, Post uploaded successfully");
+      router.push("/home");
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setform({
+        title: "",
+        video: null,
+        thumbnail: null,
+        prompt: "",
+      });
+    }
+  };
+  const openPicker = async (selectType) => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes:
+        selectType === "image"
+          ? ImagePicker.MediaTypeOptions.Images
+          : ImagePicker.MediaTypeOptions.Videos,
+      aspect: [4, 3],
+      quality: 1,
     });
     if (!result.canceled) {
-      if (seleType === "image") {
+      if (selectType === "image") {
         setform({ ...form, thumbnail: result.assets[0] });
       }
-      if (seleType === "video") {
+      if (selectType === "video") {
         setform({ ...form, video: result.assets[0] });
       }
-    }
-    else{
-      setTimeout(()=>{
-        Alert.alert('Document picked',JSON.stringify(result,null,2))  
-      },100)
     }
   };
 
@@ -68,9 +92,7 @@ const create = () => {
                   <Video
                     source={{ uri: form.video.uri }}
                     className="w-full h-64 rounded-2xl"
-                    useNativeControls
                     resizeMode={ResizeMode.COVER}
-                    isLooping
                   />
                 ) : (
                   <View className="w-full h-40 px-4 bg-black-100 rounded-2xl border border-black-200 flex justify-center items-center">
